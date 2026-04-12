@@ -21,7 +21,7 @@ sol!(
     #[allow(missing_docs)]
     #[sol(rpc)]
     DripContract,
-    "../out/Drip.sol/Drip.json"
+    "./Drip.json"
 );
 
 const MAX_CONCURRENT_TXS: usize = 10;
