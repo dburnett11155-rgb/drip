@@ -1,66 +1,192 @@
-## Foundry
+# Drip 💧
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+> Recurring payments for Web3. The simplest way to add subscriptions to any EVM protocol.
 
-Foundry consists of:
+```typescript
+cat > README.md << 'EOF'
+# Drip 💧
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+> Recurring payments for Web3. The simplest way to add subscriptions to any EVM protocol.
 
-## Documentation
+```typescript
+import Drip, { INTERVALS, DEPLOYMENTS } from "@drip/sdk";
 
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
+const drip = new Drip({ contractAddress: DEPLOYMENTS["base-sepolia"], signer });
+const { planId } = await drip.createPlan(USDC_ADDRESS, 10_000000n, INTERVALS.MONTHLY);
+const { subscriptionId } = await drip.subscribe(planId);
 ```
 
-### Test
+That's it. Your protocol now has recurring payments.
 
-```shell
-$ forge test
+---
+
+## What is Drip?
+
+Drip is an on-chain recurring payment protocol deployed on Base. It lets any Web3 protocol charge users on a recurring schedule — daily, weekly, monthly, or any custom interval.
+
+Think Stripe for Web3. One smart contract integration. Payments execute automatically. You never touch it again.
+
+---
+
+## How it works
+
+1. **Protocol creates a plan** — token, amount, interval
+2. **User subscribes** — first payment charged immediately
+3. **Drip executes payments** — automatically on schedule, forever
+4. **Protocol earns revenue** — 99% of each payment, on-chain
+
+Drip takes a 1% fee on each payment execution to fund the keeper bot infrastructure.
+
+---
+
+## Installation
+
+```bash
+npm install @drip/sdk
 ```
 
-### Format
+---
 
-```shell
-$ forge fmt
+## Quick start
+
+### Create a subscription plan
+
+```typescript
+import Drip, { INTERVALS, DEPLOYMENTS } from "@drip/sdk";
+import { ethers } from "ethers";
+
+const provider = new ethers.BrowserProvider(window.ethereum);
+const signer = await provider.getSigner();
+
+const drip = new Drip({
+  contractAddress: DEPLOYMENTS["base-sepolia"],
+  signer,
+});
+
+// Create a $10/month USDC plan
+const { planId } = await drip.createPlan(
+  USDC_ADDRESS,        // token
+  10_000000n,          // amount (10 USDC, 6 decimals)
+  INTERVALS.MONTHLY    // interval (30 days)
+);
 ```
 
-### Gas Snapshots
+### Subscribe a user
 
-```shell
-$ forge snapshot
+```typescript
+// Auto-approves token allowance and charges first payment
+const { subscriptionId } = await drip.subscribe(planId);
 ```
 
-### Anvil
+### Check subscription status
 
-```shell
-$ anvil
+```typescript
+const sub = await drip.getSubscription(subscriptionId);
+console.log(sub.active);        // true
+console.log(sub.nextPayment);   // unix timestamp of next charge
 ```
 
-### Deploy
+### Cancel a subscription
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```typescript
+// User cancels their own subscription
+await drip.cancelSubscription(subscriptionId);
+
+// Merchant cancels a specific user's subscription
+await drip.cancelSubscriptionAsMerchant(subscriptionId);
 ```
 
-### Cast
+---
 
-```shell
-$ cast <subcommand>
+## API Reference
+
+### `new Drip(config)`
+
+| Parameter | Type | Description |
+|---|---|---|
+| `contractAddress` | `string` | Drip contract address |
+| `signer` | `ethers.Signer` | Ethers.js signer |
+
+### `createPlan(token, amount, interval)`
+
+Creates a new subscription plan.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `token` | `string` | ERC-20 token address |
+| `amount` | `bigint` | Amount per cycle in token decimals |
+| `interval` | `bigint` | Seconds between payments |
+
+Returns `{ planId, tx }`
+
+### `subscribe(planId, options?)`
+
+Subscribes to a plan. Charges first payment immediately.
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `autoApprove` | `boolean` | `true` | Auto-approve token allowance |
+| `approvalAmount` | `bigint` | `MaxUint256` | Custom approval amount |
+
+Returns `{ subscriptionId, tx }`
+
+### `cancelSubscription(subscriptionId)`
+
+Cancels a subscription as the subscriber.
+
+### `cancelPlan(planId)`
+
+Deactivates a plan as the merchant.
+
+### `getStats()`
+
+Returns protocol-wide stats: `planCount`, `subscriptionCount`, `feeBps`, `feeRecipient`.
+
+---
+
+## Intervals
+
+```typescript
+import { INTERVALS } from "@drip/sdk";
+
+INTERVALS.DAILY    // 86400 seconds
+INTERVALS.WEEKLY   // 604800 seconds
+INTERVALS.MONTHLY  // 2592000 seconds
+INTERVALS.YEARLY   // 31536000 seconds
 ```
 
-### Help
+---
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+## Deployments
+
+| Network | Address |
+|---|---|
+| Base Sepolia | `0x1ad2FC3469dB1625730B4401E5717B741526B6af` |
+| Base Mainnet | Coming soon |
+
+---
+
+## Contract
+
+Drip is a non-upgradeable, audited Solidity contract. No proxies. No admin keys for payment execution. What you integrate is what runs forever.
+
+- **Language:** Solidity 0.8.20
+- **Framework:** Foundry
+- **Dependencies:** OpenZeppelin 5.0
+- **Audit:** In progress
+
+---
+
+## Security
+
+- Non-upgradeable contract — no rug vectors
+- Pull-based payments — Drip never holds user funds
+- Users can cancel anytime on-chain
+- Merchants can cancel individual subscriptions
+- Fee capped at 5% by contract — currently set to 1%
+
+---
+
+## License
+
+MIT
