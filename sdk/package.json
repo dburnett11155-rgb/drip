@@ -1,0 +1,21 @@
+{
+  "name": "@drip/sdk",
+  "version": "0.1.0",
+  "description": "Recurring payment protocol for Web3",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts"
+  },
+  "keywords": ["web3", "payments", "subscriptions", "defi", "base"],
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^5.0.0"
+  }
+}
