@@ -156,6 +156,7 @@ exports.INTERVALS = {
 };
 exports.DEPLOYMENTS = {
     "base-sepolia": "0x1ad2FC3469dB1625730B4401E5717B741526B6af",
+    "base": "0x1ad2FC3469dB1625730B4401E5717B741526B6af",
 };
 exports.default = Drip;
 //# sourceMappingURL=index.js.map

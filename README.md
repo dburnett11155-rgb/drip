@@ -9,7 +9,7 @@ cat > README.md << 'EOF'
 > Recurring payments for Web3. The simplest way to add subscriptions to any EVM protocol.
 
 ```typescript
-import Drip, { INTERVALS, DEPLOYMENTS } from "@drip/sdk";
+import Drip, { INTERVALS, DEPLOYMENTS } from "drip-web3-sdk";
 
 const drip = new Drip({ contractAddress: DEPLOYMENTS["base-sepolia"], signer });
 const { planId } = await drip.createPlan(USDC_ADDRESS, 10_000000n, INTERVALS.MONTHLY);
@@ -42,7 +42,7 @@ Drip takes a 1% fee on each payment execution to fund the keeper bot infrastruct
 ## Installation
 
 ```bash
-npm install @drip/sdk
+npm install drip-web3-sdk
 ```
 
 ---
@@ -52,7 +52,7 @@ npm install @drip/sdk
 ### Create a subscription plan
 
 ```typescript
-import Drip, { INTERVALS, DEPLOYMENTS } from "@drip/sdk";
+import Drip, { INTERVALS, DEPLOYMENTS } from "drip-web3-sdk";
 import { ethers } from "ethers";
 
 const provider = new ethers.BrowserProvider(window.ethereum);
@@ -147,7 +147,7 @@ Returns protocol-wide stats: `planCount`, `subscriptionCount`, `feeBps`, `feeRec
 ## Intervals
 
 ```typescript
-import { INTERVALS } from "@drip/sdk";
+import { INTERVALS } from "drip-web3-sdk";
 
 INTERVALS.DAILY    // 86400 seconds
 INTERVALS.WEEKLY   // 604800 seconds

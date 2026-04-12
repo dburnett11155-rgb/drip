@@ -1,5 +1,5 @@
 {
-  "name": "@drip/sdk",
+  "name": "drip-web3-sdk",
   "version": "0.1.0",
   "description": "Recurring payment protocol for Web3",
   "main": "dist/index.js",
