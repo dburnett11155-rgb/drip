@@ -250,6 +250,7 @@ export const INTERVALS = {
 
 export const DEPLOYMENTS: Record<string, string> = {
   "base-sepolia": "0x1ad2FC3469dB1625730B4401E5717B741526B6af",
+  "base": "0x1ad2FC3469dB1625730B4401E5717B741526B6af",
 };
 
 export default Drip;
