@@ -7,7 +7,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract Drip {
     using SafeERC20 for IERC20;
 
-    address public owner;
+    address public immutable owner;
     address public feeRecipient;
     uint256 public feeBps = 100;
 
@@ -83,10 +83,11 @@ contract Drip {
             nextPayment: block.timestamp + plan.interval,
             active: true
         });
-        IERC20(plan.token).safeTransferFrom(msg.sender, plan.merchant, merchantAmount);
-        IERC20(plan.token).safeTransferFrom(msg.sender, feeRecipient, fee);
+        // events before external calls
         emit Subscribed(subId, planId, msg.sender);
         emit PaymentExecuted(subId, plan.amount, fee);
+        IERC20(plan.token).safeTransferFrom(msg.sender, plan.merchant, merchantAmount);
+        IERC20(plan.token).safeTransferFrom(msg.sender, feeRecipient, fee);
         return subId;
     }
 
@@ -105,9 +106,10 @@ contract Drip {
         uint256 timePassed = block.timestamp - sub.nextPayment;
         uint256 cyclesToAdvance = (timePassed / plan.interval) + 1;
         sub.nextPayment += cyclesToAdvance * plan.interval;
+        // event before external calls
+        emit PaymentExecuted(subscriptionId, plan.amount, fee);
         IERC20(plan.token).safeTransferFrom(sub.subscriber, plan.merchant, merchantAmount);
         IERC20(plan.token).safeTransferFrom(sub.subscriber, feeRecipient, fee);
-        emit PaymentExecuted(subscriptionId, plan.amount, fee);
     }
 
     function cancelSubscription(uint256 subscriptionId) external {
