@@ -1,0 +1,7 @@
+.env
+*.env
+.env.*
+out/
+cache/
+target/
+node_modules/
