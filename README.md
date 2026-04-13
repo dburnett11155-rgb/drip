@@ -161,7 +161,7 @@ INTERVALS.YEARLY   // 31536000 seconds
 
 | Network | Address |
 |---|---|
-| Base Sepolia | `0x1ad2FC3469dB1625730B4401E5717B741526B6af` |
+| Base Sepolia | `0xba23e6f93982de89106E9E69065573b0405825A6` |
 | Base Mainnet | LIVE |
 
 ---

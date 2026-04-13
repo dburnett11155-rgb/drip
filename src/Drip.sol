@@ -7,7 +7,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract Drip {
     using SafeERC20 for IERC20;
 
-    address public immutable owner;
+    address public owner;
     address public feeRecipient;
     uint256 public feeBps = 100;
 
@@ -39,6 +39,7 @@ contract Drip {
     event PlanCancelled(uint256 indexed planId);
     event FeeRecipientUpdated(address indexed oldRecipient, address indexed newRecipient);
     event FeeBpsUpdated(uint256 oldBps, uint256 newBps);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
     modifier onlyOwner() {
         _onlyOwner();
@@ -53,6 +54,13 @@ contract Drip {
         require(_feeRecipient != address(0), "Invalid fee recipient");
         owner = msg.sender;
         feeRecipient = _feeRecipient;
+        emit OwnershipTransferred(address(0), msg.sender);
+    }
+
+    function transferOwnership(address newOwner) external onlyOwner {
+        require(newOwner != address(0), "Invalid owner");
+        emit OwnershipTransferred(owner, newOwner);
+        owner = newOwner;
     }
 
     function createPlan(address token, uint256 amount, uint256 interval) external returns (uint256) {
@@ -83,7 +91,6 @@ contract Drip {
             nextPayment: block.timestamp + plan.interval,
             active: true
         });
-        // events before external calls
         emit Subscribed(subId, planId, msg.sender);
         emit PaymentExecuted(subId, plan.amount, fee);
         IERC20(plan.token).safeTransferFrom(msg.sender, plan.merchant, merchantAmount);
@@ -106,7 +113,6 @@ contract Drip {
         uint256 timePassed = block.timestamp - sub.nextPayment;
         uint256 cyclesToAdvance = (timePassed / plan.interval) + 1;
         sub.nextPayment += cyclesToAdvance * plan.interval;
-        // event before external calls
         emit PaymentExecuted(subscriptionId, plan.amount, fee);
         IERC20(plan.token).safeTransferFrom(sub.subscriber, plan.merchant, merchantAmount);
         IERC20(plan.token).safeTransferFrom(sub.subscriber, feeRecipient, fee);
