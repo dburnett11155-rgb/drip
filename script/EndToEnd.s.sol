@@ -24,8 +24,8 @@ contract EndToEnd is Script {
         // create a 10 mUSDC/minute plan for fast testing
         uint256 planId = drip.createPlan(
             tokenAddress,
-            10_000000,  // 10 mUSDC
-            60          // 60 second interval for fast testing
+            10_000000, // 10 mUSDC
+            60 // 60 second interval for fast testing
         );
         console.log("Plan created:", planId);
 

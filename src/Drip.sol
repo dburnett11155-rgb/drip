@@ -32,7 +32,9 @@ contract Drip {
     mapping(uint256 => Plan) public plans;
     mapping(uint256 => Subscription) public subscriptions;
 
-    event PlanCreated(uint256 indexed planId, address indexed merchant, address token, uint256 amount, uint256 interval);
+    event PlanCreated(
+        uint256 indexed planId, address indexed merchant, address token, uint256 amount, uint256 interval
+    );
     event Subscribed(uint256 indexed subscriptionId, uint256 indexed planId, address indexed subscriber);
     event PaymentExecuted(uint256 indexed subscriptionId, uint256 amount, uint256 fee);
     event SubscriptionCancelled(uint256 indexed subscriptionId);
@@ -68,13 +70,7 @@ contract Drip {
         require(amount > 0, "Amount must be greater than 0");
         require(interval > 0, "Interval must be greater than 0");
         uint256 planId = planCount++;
-        plans[planId] = Plan({
-            token: token,
-            amount: amount,
-            interval: interval,
-            merchant: msg.sender,
-            active: true
-        });
+        plans[planId] = Plan({token: token, amount: amount, interval: interval, merchant: msg.sender, active: true});
         emit PlanCreated(planId, msg.sender, token, amount, interval);
         return planId;
     }
@@ -86,10 +82,7 @@ contract Drip {
         uint256 merchantAmount = plan.amount - fee;
         uint256 subId = subscriptionCount++;
         subscriptions[subId] = Subscription({
-            planId: planId,
-            subscriber: msg.sender,
-            nextPayment: block.timestamp + plan.interval,
-            active: true
+            planId: planId, subscriber: msg.sender, nextPayment: block.timestamp + plan.interval, active: true
         });
         emit Subscribed(subId, planId, msg.sender);
         emit PaymentExecuted(subId, plan.amount, fee);

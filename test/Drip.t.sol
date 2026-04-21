@@ -110,7 +110,7 @@ contract DripTest is Test {
         vm.prank(subscriber);
         drip.cancelSubscription(subId);
 
-        (,, , bool active) = getSubscription(subId);
+        (,,, bool active) = getSubscription(subId);
         assertFalse(active);
     }
 
