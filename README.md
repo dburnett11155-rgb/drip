@@ -59,7 +59,7 @@ const provider = new ethers.BrowserProvider(window.ethereum);
 const signer = await provider.getSigner();
 
 const drip = new Drip({
-  contractAddress: DEPLOYMENTS["base-sepolia"],
+  contractAddress: DEPLOYMENTS["base"],
   signer,
 });
 
