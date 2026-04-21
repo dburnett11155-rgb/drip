@@ -3,12 +3,6 @@
 > Recurring payments for Web3. The simplest way to add subscriptions to any EVM protocol.
 
 ```typescript
-cat > README.md << 'EOF'
-# Drip 💧
-
-> Recurring payments for Web3. The simplest way to add subscriptions to any EVM protocol.
-
-```typescript
 import Drip, { INTERVALS, DEPLOYMENTS } from "drip-web3-sdk";
 
 const drip = new Drip({ contractAddress: DEPLOYMENTS["base"], signer });
@@ -161,8 +155,8 @@ INTERVALS.YEARLY   // 31536000 seconds
 
 | Network | Address |
 |---|---|
-| Base | `0xba23e6f93982de89106E9E69065573b0405825A6` |
-| Base Mainnet | LIVE |
+| Base Mainnet | `0xba23e6f93982de89106E9E69065573b0405825A6` |
+| Base Sepolia (testnet) | `0x1ad2FC3469dB1625730B4401E5717B741526B6af` |
 
 ---
 
@@ -173,6 +167,7 @@ Drip is a non-upgradeable, audited Solidity contract. No proxies. No admin keys 
 - **Language:** Solidity 0.8.20
 - **Framework:** Foundry
 - **Dependencies:** OpenZeppelin 5.0
+- **Ownership:** Gnosis Safe `0x05f16F1B126cff3c7BC9079Cf7278E2C6BD35B46`
 - **Audit:** In progress
 
 ---
@@ -184,6 +179,7 @@ Drip is a non-upgradeable, audited Solidity contract. No proxies. No admin keys 
 - Users can cancel anytime on-chain
 - Merchants can cancel individual subscriptions
 - Fee capped at 5% by contract — currently set to 1%
+- Owned by Gnosis Safe multisig
 
 ---
 
