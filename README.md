@@ -11,7 +11,7 @@ cat > README.md << 'EOF'
 ```typescript
 import Drip, { INTERVALS, DEPLOYMENTS } from "drip-web3-sdk";
 
-const drip = new Drip({ contractAddress: DEPLOYMENTS["base-sepolia"], signer });
+const drip = new Drip({ contractAddress: DEPLOYMENTS["base"], signer });
 const { planId } = await drip.createPlan(USDC_ADDRESS, 10_000000n, INTERVALS.MONTHLY);
 const { subscriptionId } = await drip.subscribe(planId);
 ```
@@ -161,7 +161,7 @@ INTERVALS.YEARLY   // 31536000 seconds
 
 | Network | Address |
 |---|---|
-| Base Sepolia | `0xba23e6f93982de89106E9E69065573b0405825A6` |
+| Base | `0xba23e6f93982de89106E9E69065573b0405825A6` |
 | Base Mainnet | LIVE |
 
 ---
